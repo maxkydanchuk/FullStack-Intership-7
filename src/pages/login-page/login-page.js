@@ -1,26 +1,70 @@
 import React, {useEffect, useState} from "react";
-import {Button, ButtonGroup, Flex, FormControl, FormHelperText, FormLabel, Input} from "@chakra-ui/react";
+import {Button, ButtonGroup, Flex, FormControl, FormHelperText, FormLabel, Input, useToast} from "@chakra-ui/react";
 import {NavLink, useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
-import {addLoginSuccessThunk, loginSuccess} from "../../redux/auth/authActions";
+import {addLoginSuccessThunk, loginFail} from "../../redux/auth/authActions";
+import {clearMessage} from "../../redux/auth/messages/messagesAction";
+
 
 const LoginPage = () => {
 
+    const authStore = useSelector((state) => ({
+        error: state.auth.error,
+        token: state.auth.token,
+        isAuthenticated: state.auth.isAuthenticated
+    }));
+
+    let { isAuthenticated } = authStore;
+
+    console.log(isAuthenticated)
+    const messagesStore = useSelector( (state) => ({
+        message: state.messages.message
+    }));
+
     const [ email, setEmail ] = useState("");
     const [ password, setPassword] = useState("");
+    const [errorMessage, setErrorMessage] = useState(messagesStore.message)
+    const toast = useToast()
     const history = useNavigate();
-
     const dispatch = useDispatch()
 
-    const getUser = (item) => dispatch(addLoginSuccessThunk(item))
+    useEffect(() => {
+        setErrorMessage(messagesStore.message)
+    }, [messagesStore.message, authStore.error])
 
+
+
+    useEffect(() => {
+        if(authStore.error) {
+            dispatch(loginFail(!authStore.error));
+            return errorToast(messagesStore.message);
+        } else {
+           dispatch( loginFail(false))
+            dispatch(clearMessage())
+        }
+
+    }, [errorMessage, password, email])
+
+    const getUser = (item) => dispatch(addLoginSuccessThunk(item, history))
 
     const handleSubmit = (e) => {
         e.preventDefault();
         getUser({email, password});
-
-        history("/");
     }
+
+    const errorToast = (title) => {
+        const id = 'error-toast';
+        if(!toast.isActive(id)) {
+            toast({
+                title: `${title}`,
+                id: id,
+                position: 'top-right',
+                status: 'error',
+                isClosable: true,
+            })
+        }
+    }
+
 
     return (
         <Flex align="center" justify={"center"} mt="10" maxWidth="30%">

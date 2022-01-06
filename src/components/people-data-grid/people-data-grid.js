@@ -9,7 +9,7 @@ const PeopleDataGrid = ({
   error,
   onSortChange,
   sortOrder,
-  sortColumn, dispatchDeletePerson, token, isOpen, onClose, onEditItem, onOpen
+  sortColumn, dispatchDeletePerson, token, isOpen, onClose, onEditItem, onOpen, isAuthenticated
 }) => {
 
   const buttons = [
@@ -44,6 +44,7 @@ const PeopleDataGrid = ({
             onClose={onClose}
             onEditItem={onEditItem}
             token={token}
+            isAuthenticated={isAuthenticated}
         />
       </Flex>
     );

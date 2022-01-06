@@ -12,21 +12,27 @@ import {
 
 
 
-const MainPage = ({onLogout}) => {
+const MainPage = ({ onLogout, isAuthenticated }) => {
 
     return (
       <>
           <Flex align={"center"} justify={"center"} direction={"column"}>
               <Box mt="5">
+                  {!isAuthenticated &&
                   <NavLink to={'/login'}>
                       <Button> Login </Button>
                   </NavLink>
+                  }
+                  {isAuthenticated &&
                   <NavLink to={'/'}>
                       <Button onClick={onLogout}> Logout </Button>
                   </NavLink>
+                  }
+                  {!isAuthenticated &&
                   <NavLink to={'/register'}>
                       <Button ml="5"> Register </Button>
                   </NavLink>
+                  }
               </Box>
               <Box mt="5"> Welcome to Star Wars database</Box>
               <Box boxSize="s ">

@@ -10,7 +10,6 @@ import {
     DELETE_PERSON,
     RESET_STORE
 } from './peopleTypes'
-import {addStarship, deleteStarship, editStarship} from "../starships/starshipsActions";
 
 
 const api = new apiService();

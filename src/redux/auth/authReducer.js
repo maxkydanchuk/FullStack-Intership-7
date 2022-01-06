@@ -1,12 +1,32 @@
-import { REGISTER_SUCCESS, REGISTER_FAIL, LOGIN_SUCCESS, LOGIN_FAIL} from "./authTypes";
+import { REGISTER_SUCCESS, LOGIN_SUCCESS, SET_IS_AUTHENTICATED, LOGIN_FAIL } from "./authTypes";
 
-let initialState = null;
+let initialState = {
+    isAuthenticated: false,
+    token: null,
+    error: null,
+};
 
 export const authReducer = (state = initialState, action) => {
     switch (action.type) {
         case LOGIN_SUCCESS:
             return {
-                state: action.payload
+                ...state,
+                token: action.payload,
+                error: false,
+            }
+        case LOGIN_FAIL:
+            return {
+                ...state,
+                error: action.isFailed
+            }
+        case SET_IS_AUTHENTICATED:
+            return {
+                ...state,
+                isAuthenticated: action.isAuthenticated
+            }
+        case REGISTER_SUCCESS:
+            return {
+                initialState
             }
         default:
             return state

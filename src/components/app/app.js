@@ -6,24 +6,34 @@ import {
 } from "react-router-dom";
 import { ChakraProvider, Box } from "@chakra-ui/react";
 import MainPage from "../main-page";
-import { useDispatch } from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import { setCurrentPage } from "../../redux/people/peopleActions";
 import StarshipsPage from "../../pages/starships-page";
 import PeoplePage from "../../pages/people-page";
-import LoginPage from "../../pages/loginPage/loginPage";
-import RegisterPage from "../../pages/registerPage/registerPage";
-import {loginSuccess} from "../../redux/auth/authActions";
+import LoginPage from "../../pages/login-page/login-page";
+import RegisterPage from "../../pages/register-page/register-page";
+import {loginSuccess, setIsAuthenticated} from "../../redux/auth/authActions";
 
 function App() {
   const [inputValue, setSearchValue] = useState("");
   const [sortOrder, setOrder] = useState(null);
   const [sortColumn, setSortColumn] = useState(null);
   const dispatch = useDispatch();
+  // const history = useNavigate();
+
+  const authStore = useSelector((state) => ({
+    isAuthenticated: state.auth.isAuthenticated
+  }));
+
+  let  {
+    isAuthenticated
+  } = authStore;
 
   useEffect(() => {
     const data = localStorage.getItem('token');
     if(data) {
-      dispatch(loginSuccess(data))
+      dispatch(loginSuccess(data));
+      dispatch(setIsAuthenticated(true));
     }
   }, [])
 
@@ -42,8 +52,11 @@ function App() {
   };
 
   const onLogout = () => {
-    localStorage.setItem('token', null);
-    dispatch(loginSuccess(null))
+    localStorage.removeItem('token');
+    dispatch(setIsAuthenticated(false));
+    dispatch(loginSuccess())
+
+    // history("/");
   };
 
   const dispatchSetCurrentPage = (page) => {
@@ -61,7 +74,7 @@ function App() {
           <Routes>
             <Route path='/login' element={<LoginPage/>} />
             <Route path='/register' element={<RegisterPage/>} />
-            <Route path="/" element={<MainPage onLogout={onLogout} />} />
+            <Route path="/" element={<MainPage onLogout={onLogout} isAuthenticated={isAuthenticated} />} />
             <Route
               path="/people"
               element={
@@ -73,6 +86,7 @@ function App() {
                   onSearchChange={onSearchChange}
                   inputValue={inputValue}
                   dispatchSetCurrentPage={dispatchSetCurrentPage}
+                  isAuthenticated={isAuthenticated}
                 />
               }
             />
@@ -87,6 +101,7 @@ function App() {
                   onSearchChange={onSearchChange}
                   inputValue={inputValue}
                   dispatchSetCurrentPage={dispatchSetCurrentPage}
+                  isAuthenticated={isAuthenticated}
                 />
               }
             />

@@ -4,9 +4,9 @@ export default class apiService {
 
   async getResource(url) {
     const res = await fetch(`${this._apiBase}${url}`);
-    // if (!res.ok) {
-    //   throw new Error(`Could not fetch ${url}, status ${res.status}`);
-    // }
+    if (!res.ok) {
+      throw new Error(`Could not fetch ${url}, status ${res.status}`);
+    }
     return await res.json();
   }
 
@@ -48,7 +48,7 @@ export default class apiService {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
-        'x-access-token' : token.state
+        'x-access-token' : token
       },
       body: JSON.stringify(data)
     });
@@ -105,17 +105,23 @@ export default class apiService {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'x-acess-token' : ''
+        'x-access-token' : ''
       },
       body: JSON.stringify(data)
     })
 
-    const response = res.json().then(res => (res));
+    const response = await res.json();
+
     localStorage.setItem('token', await response);
+
+    if (!res.ok) {
+      throw new Error(response.error);
+    }
+
     return response
   }
 
-  registerUser = async (data, token) => {
+  registerUser = async (data) => {
 
     const res = await fetch(`${this._apiBase}/register`, {
       method: 'POST',
@@ -124,10 +130,13 @@ export default class apiService {
       },
       body: JSON.stringify(data)
     });
+
+    const response = await res.json();
+
     if (!res.ok) {
-      // throw new Error(`Could not fetch , status ${res.status}`);
+      throw new Error(response.error);
     }
-    return await res.json();
+    return await response;
   }
 
 

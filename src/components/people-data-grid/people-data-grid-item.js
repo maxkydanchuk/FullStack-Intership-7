@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, Button } from "@chakra-ui/react";
 
-const PeopleDataGridItem = ({_id, name, birthYear, eyeColor, gender, height, dispatchDeletePerson, onEditItem, token }) => {
+const PeopleDataGridItem = ({_id, name, birthYear, eyeColor, gender, height, dispatchDeletePerson, onEditItem, token, isAuthenticated }) => {
 
     const person = {
         _id,
@@ -29,12 +29,12 @@ const PeopleDataGridItem = ({_id, name, birthYear, eyeColor, gender, height, dis
       <Box className="table__row_fullname" flex="2" pt="8" pb="8">
         {height}
       </Box>
-      <Button  colorScheme='teal' variant='link' flex="1" onClick={ () => onEditItem(person)}>
-    Edit
-  </Button>
-      <Button  colorScheme='teal' variant='link' flex="1" onClick={ () => dispatchDeletePerson(_id, token)}>
-    Delete
-  </Button>
+        {isAuthenticated &&  <Button  colorScheme='teal' variant='link' flex="1" onClick={ () => onEditItem(person)}>
+            Edit
+        </Button>}
+        {isAuthenticated &&  <Button  colorScheme='teal' variant='link' flex="1" onClick={ () => dispatchDeletePerson(_id, token)}>
+            Delete
+        </Button>}
     </>
   );
 };

@@ -5,7 +5,7 @@ import PeopleDataGrid from "../../components/people-data-grid";
 import PageNavbar from "../../components/page-navbar";
 import BottomButtons from "../../components/bottom-buttons";
 import PeopleModal from "../../components/people-modal";
-import {useDisclosure} from "@chakra-ui/react";
+import { useDisclosure} from "@chakra-ui/react";
 
 
 const PeoplePage = ({
@@ -15,7 +15,7 @@ const PeoplePage = ({
   sortColumn,
   onSearchChange,
   inputValue,
-  dispatchSetCurrentPage,
+  dispatchSetCurrentPage,isAuthenticated
 }) => {
   const dispatch = useDispatch();
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -29,7 +29,7 @@ const PeoplePage = ({
   }));
 
   const authStore = useSelector((state) => ({
-    token: state.auth
+    token: state.auth.token
   }));
 
   let {
@@ -70,11 +70,15 @@ const PeoplePage = ({
     onOpen();
   }
 
+  const label = 'person'
   return (
       <>
         <PageNavbar
             onSearchChange={onSearchChange}
             inputValue={inputValue}
+            onCreateItem={handleEditItem}
+            label={label}
+            isAuthenticated={isAuthenticated}
         />
         <PeopleModal
             isOpen={isOpen}
@@ -95,6 +99,7 @@ const PeoplePage = ({
             onClose={onClose}
             onEditItem={handleEditItem}
             token={token}
+            isAuthenticated={isAuthenticated}
         />
         <BottomButtons
             currentPage={peopleCurrentPage}

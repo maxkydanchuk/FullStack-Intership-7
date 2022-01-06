@@ -1,7 +1,7 @@
 import React from "react";
 import {Box, Button } from "@chakra-ui/react";
 
-const StarshipsPageItem = ({_id, starshipClass, MGLT, hyperdriveRating, pilots, dispatchDeleteStarship, onEditItem, token }) => {
+const StarshipsPageItem = ({_id, starshipClass, MGLT, hyperdriveRating, pilots, dispatchDeleteStarship, onEditItem, token, isAuthenticated }) => {
 
     const starship = {
         _id,
@@ -25,12 +25,13 @@ const StarshipsPageItem = ({_id, starshipClass, MGLT, hyperdriveRating, pilots, 
             <Box className="table__row_pilots" flex="2" pt="8" pb="8" textAlign={"center"}>
                 {pilots}
             </Box>
-                    <Button colorScheme='teal' variant='link' flex="1" onClick={ () => onEditItem(starship)}>
-                        Edit
-                    </Button>
-            <Button colorScheme='teal' variant='link' flex="1" onClick={() => dispatchDeleteStarship(_id, token)}>
+            {isAuthenticated && <Button colorScheme='teal' variant='link' flex="1" onClick={ () => onEditItem(starship)}>
+                Edit
+            </Button>}
+            {isAuthenticated && <Button colorScheme='teal' variant='link' flex="1" onClick={() => dispatchDeleteStarship(_id, token)}>
                 Delete
-            </Button>
+            </Button>}
+
         </>
     );
 };
